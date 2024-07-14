@@ -1,1 +1,95 @@
-HashMap
+# HashMap Class in Python
+
+## Overview
+
+This `HashMap` class implements a basic hash map (also known as a hash table) in Python. A hash map is a data structure that maps keys to values, allowing for efficient data retrieval.
+
+## Class Methods
+
+### `__init__()`
+
+The constructor initializes the hash map. It sets a fixed size for the hash map (10 in this case) and creates an array of empty lists. Each list corresponds to a bucket that will store key-value pairs.
+
+```python
+def __init__(self):
+    self.max = 10
+    self.arr = [[] for i in range(0,self.max)]
+```
+
+### `HashFunction(key)`
+
+This method computes the hash value for a given key. It does so by summing the ASCII values of all characters in the key and then taking the modulo of this sum with the maximum size of the hash map.
+
+```python
+def HashFunction(self, key):
+    sum = 0
+    for i in key:
+        sum += ord(i)
+    return sum % self.max
+```
+
+### `__getitem__(self, key)`
+
+This method retrieves the value associated with a given key. It first computes the hash value of the key to find the appropriate bucket, then searches through the bucket for the key and returns the associated value.
+
+```python
+def __getitem__(self, key):
+    h = self.HashFunction(key)
+    for ele in self.arr[h]:
+        if ele[0] == key:
+            return ele[1]
+```
+
+### `__setitem__(self, key, value)`
+
+This method sets the value for a given key. It first computes the hash value of the key to find the appropriate bucket. It then searches through the bucket for the key. If the key is found, it updates the value. If the key is not found, it appends a new key-value pair to the bucket.
+
+```python
+def __setitem__(self, key, value):
+    h = self.HashFunction(key)
+    found = False
+    for i, ele in enumerate(self.arr[h]):
+        if len(ele) == 2 and ele[0] == key:
+            self.arr[h][i] = (key, value)
+            found = True
+            break
+    if not found:
+        self.arr[h].append((key, value))
+```
+
+### `__delitem__(self, key)`
+
+This method deletes the key-value pair associated with a given key. It first computes the hash value of the key to find the appropriate bucket, then searches through the bucket for the key and deletes the key-value pair if found.
+
+```python
+def __delitem__(self, key):
+    h = self.HashFunction(key)
+    for i, ele in enumerate(self.arr[h]):
+        if ele[0] == key:
+            del self.arr[h][i]
+```
+
+## Usage
+
+To use the `HashMap` class, you can create an instance of the class and use it to store, retrieve, and delete key-value pairs:
+
+```python
+# Creating an instance of HashMap
+hash_map = HashMap()
+
+# Adding key-value pairs
+hash_map['name'] = 'Alice'
+hash_map['age'] = 30
+
+# Retrieving values
+print(hash_map['name'])  # Output: Alice
+print(hash_map['age'])   # Output: 30
+
+# Deleting a key-value pair
+del hash_map['name']
+
+# Trying to retrieve a deleted key
+print(hash_map['name'])  # Output: None (or raises an error if key not found)
+```
+
+This `HashMap` class is a simple implementation that demonstrates the basic principles of a hash table. It can be further improved by handling collisions more efficiently and by implementing methods for resizing the hash map when it becomes too full.
